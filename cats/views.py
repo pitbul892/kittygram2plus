@@ -1,16 +1,18 @@
 from rest_framework import permissions, viewsets
 from rest_framework.throttling import AnonRateThrottle
+from rest_framework.pagination import LimitOffsetPagination
 
 from .models import Achievement, Cat, User
 from .permissions import OwnerOrReadOnly, ReadOnly
 from .serializers import AchievementSerializer, CatSerializer, UserSerializer
-
+from .pagination import CatsPagination
 
 class CatViewSet(viewsets.ModelViewSet):
     queryset = Cat.objects.all()
     serializer_class = CatSerializer
     permission_classes = (OwnerOrReadOnly,) 
     throttle_classes = (AnonRateThrottle,)
+    pagination_class = CatsPagination
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user) 
 
